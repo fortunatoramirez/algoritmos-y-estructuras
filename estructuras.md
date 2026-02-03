@@ -273,7 +273,7 @@ Este resultado se obtiene directamente después del ordenamiento.
 
 ---
 
-## 10. Ejercicios propuestos
+## 10. Ejercicios 
 
 ### Ejercicio 1
 
