@@ -153,7 +153,7 @@ Cada vez que el jugador realice una acción, esta quedará guardada en la pila. 
 
 ## 8. Bloque 1. Modelado de una acción del jugador
 
-En lugar de almacenar solamente cadenas de texto, se utilizará una clase llamada `AccionJuego`. Esto permite continuar reforzando el uso de objetos dentro del mini motor de videojuego.
+En lugar de almacenar solamente cadenas de texto, se utilizará una clase llamada `AccionJuego`.
 
 ### Código
 
