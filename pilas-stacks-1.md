@@ -50,14 +50,14 @@ Ese comportamiento corresponde exactamente a una pila.
 
 ---
 
-## 3. Relación con el mini motor de videojuego del curso
+## 3. Relación con un motor de videojuego del
 
 En las prácticas anteriores se ha ido construyendo, paso a paso, la lógica de un pequeño sistema de videojuego:
 
 * En la práctica de Programación Orientada a Objetos se modelaron entidades como `Jugador`, `Enemigo` e `Item`.
 * En la práctica de lista enlazada se almacenaron dinámicamente entidades activas del juego.
 
-Ahora se agregará un nuevo componente al mini motor:
+Ahora se agregará un nuevo componente:
 
 * **El historial de acciones del jugador**.
 
