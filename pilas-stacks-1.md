@@ -732,10 +732,12 @@ int main() {
 
             cout << "ID de la accion: ";
             cin >> id;
+            cin.ignore();
             cout << "Tipo de accion: ";
-            cin >> tipo;
+            getline(cin, tipo);
             cout << "Descripcion de la accion: ";
             cin >> descripcion;
+            getline(cin, descripcion);
             cout << "Energia consumida: ";
             cin >> energia;
 
