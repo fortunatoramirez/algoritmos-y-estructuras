@@ -555,7 +555,7 @@ void ConexionJuego::cerrar() {
 
 ## Prueba rápida de conexión
 
-### Versión servidor en `main.cpp`
+### Versión servidor en `servidor.cpp`
 
 ```cpp
 #include <iostream>
@@ -578,7 +578,7 @@ int main() {
 }
 ```
 
-### Versión cliente en `main.cpp`
+### Versión cliente en `cliente.cpp`
 
 ```cpp
 #include <iostream>
