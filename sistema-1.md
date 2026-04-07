@@ -1379,3 +1379,366 @@ Cada equipo deberá explicar y demostrar:
 8. cómo se determina el final de la partida
 
 ---
+
+---
+---
+---
+
+---
+
+# Anexo B. Crear un icono de doble clic con imagen para el programa
+
+## Objetivo
+
+Que el estudiante aprenda a darle una presentación más formal a su programa, agregando una imagen como icono al archivo ejecutable, de manera que el sistema pueda identificarse visualmente al abrirlo o localizarlo dentro de Windows.
+
+## Introducción
+
+Cuando un programa se compila en Windows, normalmente se genera un archivo `.exe`. Si no se personaliza, ese archivo suele aparecer con un icono genérico. Sin embargo, es posible agregar una imagen para que el ejecutable tenga una identidad visual propia.
+
+Esto no cambia la lógica del programa ni su funcionamiento interno, pero sí mejora su presentación. Además, permite que el sistema sea más fácil de identificar para el usuario, especialmente cuando existen varios archivos ejecutables en la misma carpeta.
+
+En Windows, esta personalización suele hacerse mediante un archivo de recursos. Dicho archivo indica qué imagen se incrustará dentro del ejecutable. Para ello, la imagen debe estar en formato `.ico`.
+
+---
+
+## Material necesario
+
+Para este anexo se requiere:
+
+* el archivo ejecutable del proyecto, por ejemplo `JuegoEnLinea.exe`
+* una imagen convertida a formato `.ico`
+* un archivo de recursos con extensión `.rc`
+* el compilador `windres` incluido normalmente en MinGW
+* el compilador `g++`
+
+---
+
+## Estructura sugerida de archivos
+
+Dentro de la carpeta del proyecto, agregar los siguientes archivos:
+
+```text
+JuegoEnLinea/
+├── icono_juego.ico
+├── recurso_icono.rc
+├── main.cpp
+├── juego/
+├── estructuras/
+└── red/
+```
+
+---
+
+## Paso 1. Preparar la imagen del icono
+
+El icono que se agregará al programa debe estar en formato `.ico`.
+
+Se recomienda:
+
+* usar una imagen cuadrada
+* mantener un diseño simple
+* nombrarla de forma clara, por ejemplo:
+
+```text
+icono_juego.ico
+```
+
+Este archivo debe copiarse a la carpeta principal del proyecto.
+
+---
+
+## Paso 2. Crear el archivo de recursos
+
+Crear un archivo llamado:
+
+```text
+recurso_icono.rc
+```
+
+y escribir dentro lo siguiente:
+
+```rc
+IDI_ICONO1 ICON "icono_juego.ico"
+```
+
+### Explicación
+
+* `IDI_ICONO1` es el identificador del recurso
+* `ICON` indica que se trata de un icono
+* `"icono_juego.ico"` es el nombre del archivo que será incrustado en el ejecutable
+
+Este archivo le dice al compilador que tome la imagen y la agregue como recurso visual del programa.
+
+---
+
+## Paso 3. Compilar el archivo de recursos
+
+Antes de enlazar el icono con el programa, se debe convertir el archivo `.rc` a un archivo objeto `.o`.
+
+Para ello, usar:
+
+```bash
+windres recurso_icono.rc -O coff -o recurso_icono.o
+```
+
+### Explicación
+
+* `windres` procesa archivos de recursos en Windows
+* `recurso_icono.rc` es el archivo fuente
+* `-O coff` define el formato del archivo objeto
+* `-o recurso_icono.o` indica el nombre del archivo de salida
+
+Si el proceso fue correcto, se generará un archivo llamado:
+
+```text
+recurso_icono.o
+```
+
+---
+
+## Paso 4. Compilar el programa incluyendo el icono
+
+Una vez generado el archivo `recurso_icono.o`, este debe incluirse junto con los demás archivos del proyecto durante la compilación.
+
+Ejemplo:
+
+```bash
+g++ main.cpp juego/Jugador.cpp juego/Accion.cpp juego/Partida.cpp estructuras/ListaInventario.cpp estructuras/PilaHistorial.cpp red/ConexionJuego.cpp recurso_icono.o -o JuegoEnLinea.exe -lws2_32
+```
+
+### Explicación
+
+En esta instrucción:
+
+* se compilan todos los archivos fuente del proyecto
+* se agrega el archivo `recurso_icono.o`
+* se genera el ejecutable `JuegoEnLinea.exe`
+* se enlaza la biblioteca `ws2_32` necesaria para Winsock
+
+---
+
+## Resultado esperado
+
+Si todo se realizó correctamente, el archivo `JuegoEnLinea.exe` deberá mostrarse con el icono seleccionado en lugar del icono genérico de Windows.
+
+---
+
+## Observación importante
+
+En ocasiones, Windows mantiene en caché algunos iconos y puede tardar un momento en actualizar la imagen mostrada. Si esto ocurre, se recomienda:
+
+* cerrar y volver a abrir la carpeta
+* cambiar de vista en el Explorador
+* reiniciar el Explorador de Windows
+* o reiniciar la computadora si fuera necesario
+
+---
+
+## Actividad de comprobación
+
+El estudiante deberá comprobar lo siguiente:
+
+1. que el archivo `.ico` fue agregado correctamente a la carpeta del proyecto
+2. que el archivo `.rc` fue creado con la sintaxis correcta
+3. que `windres` generó el archivo `recurso_icono.o`
+4. que el ejecutable final aparece con el icono personalizado
+
+---
+
+# Anexo C. Instalar el programa de manera profesional mediante un setup
+
+## Objetivo
+
+Que el estudiante aprenda a distribuir su programa mediante un instalador profesional para Windows, de forma que el usuario final pueda instalarlo, crear accesos directos y desinstalarlo de manera ordenada.
+
+## Introducción
+
+Cuando un proyecto termina su desarrollo, no siempre es suficiente entregar únicamente el archivo `.exe`. En entornos reales, los programas suelen distribuirse mediante un **instalador** o **setup**, que guía al usuario durante el proceso de instalación.
+
+Un instalador permite:
+
+* copiar el programa a una carpeta adecuada
+* crear accesos directos
+* registrar el programa para desinstalación
+* presentar una apariencia más formal
+
+En esta práctica se utilizará **Inno Setup**, una herramienta ampliamente usada en Windows para construir instaladores.
+
+---
+
+## Material necesario
+
+Para este anexo se requiere:
+
+* el ejecutable final del proyecto, por ejemplo `JuegoEnLinea.exe`
+* el archivo del icono, por ejemplo `icono_juego.ico`
+* un archivo de texto con instrucciones, por ejemplo `README.txt`
+* el programa **Inno Setup** instalado en Windows
+
+---
+
+## Estructura sugerida de la carpeta de entrega
+
+Antes de crear el instalador, conviene reunir los archivos finales del programa en una carpeta limpia como la siguiente:
+
+```text
+Entrega_JuegoEnLinea/
+├── JuegoEnLinea.exe
+├── icono_juego.ico
+├── README.txt
+```
+
+Si el programa necesita más archivos adicionales, también deben colocarse aquí.
+
+---
+
+## Paso 1. Crear el script del instalador
+
+Crear un archivo con extensión `.iss`, por ejemplo:
+
+```text
+JuegoEnLinea.iss
+```
+
+Dentro de ese archivo escribir el siguiente script:
+
+```ini
+[Setup]
+AppName=Juego En Linea
+AppVersion=1.0
+AppVerName=Juego En Linea 1.0
+DefaultDirName={autopf}\JuegoEnLinea
+DefaultGroupName=Juego En Linea
+OutputDir=Output
+OutputBaseFilename=Instalador_JuegoEnLinea
+SetupIconFile=icono_juego.ico
+UninstallDisplayIcon={app}\JuegoEnLinea.exe
+Compression=lzma
+SolidCompression=yes
+
+[Files]
+Source: "JuegoEnLinea.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "icono_juego.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "README.txt"; DestDir: "{app}"; Flags: ignoreversion
+
+[Icons]
+Name: "{group}\Juego En Linea"; Filename: "{app}\JuegoEnLinea.exe"; IconFilename: "{app}\icono_juego.ico"
+Name: "{autodesktop}\Juego En Linea"; Filename: "{app}\JuegoEnLinea.exe"; IconFilename: "{app}\icono_juego.ico"
+
+[Run]
+Filename: "{app}\JuegoEnLinea.exe"; Description: "Ejecutar Juego En Linea"; Flags: nowait postinstall skipifsilent
+```
+
+---
+
+## Paso 2. Explicar la función de cada bloque
+
+### Sección `[Setup]`
+
+Define los datos generales del instalador:
+
+* nombre del programa
+* versión
+* carpeta de instalación
+* nombre del archivo instalador
+* icono del instalador
+* método de compresión
+
+### Sección `[Files]`
+
+Indica qué archivos se copiarán al equipo donde se instale el programa.
+
+### Sección `[Icons]`
+
+Crea los accesos directos:
+
+* uno en el menú de programas
+* otro en el escritorio
+
+### Sección `[Run]`
+
+Permite ejecutar el programa al finalizar la instalación, si el usuario así lo desea.
+
+---
+
+## Paso 3. Abrir Inno Setup
+
+Abrir el programa **Inno Setup** y cargar el archivo:
+
+```text
+JuegoEnLinea.iss
+```
+
+Una vez abierto, revisar que las rutas de los archivos coincidan con la carpeta donde realmente se encuentran `JuegoEnLinea.exe`, `icono_juego.ico` y `README.txt`.
+
+---
+
+## Paso 4. Compilar el instalador
+
+Dentro de Inno Setup, compilar el script.
+
+Si todo está correcto, se generará una carpeta llamada:
+
+```text
+Output
+```
+
+y dentro de ella aparecerá el instalador final:
+
+```text
+Instalador_JuegoEnLinea.exe
+```
+
+---
+
+## Paso 5. Probar la instalación
+
+Ejecutar el archivo generado y comprobar que:
+
+* aparece el nombre correcto del programa
+* el instalador copia el programa en la carpeta indicada
+* se crea el acceso directo en escritorio
+* el acceso directo muestra el icono correcto
+* el programa se ejecuta correctamente
+* el programa aparece en la lista de aplicaciones instaladas para poder desinstalarse
+
+---
+
+## Resultado esperado
+
+Al finalizar este anexo, el estudiante deberá contar con:
+
+* un archivo instalador del programa
+* un proceso de instalación guiado
+* accesos directos creados automáticamente
+* una forma más profesional de distribuir su proyecto
+
+---
+
+## Actividad de comprobación
+
+El estudiante deberá demostrar:
+
+1. que preparó correctamente la carpeta de entrega
+2. que creó el archivo `JuegoEnLinea.iss`
+3. que compiló el instalador en Inno Setup
+4. que el instalador genera accesos directos
+5. que el programa se instala y ejecuta correctamente
+6. que el programa puede desinstalarse desde Windows
+
+---
+
+## Recomendaciones finales
+
+Para una entrega más formal se recomienda:
+
+* usar un nombre claro del programa
+* colocar una versión correcta
+* utilizar un icono propio
+* incluir un archivo `README.txt`
+* probar el instalador en otra computadora antes de entregarlo
+
+---
+
+
