@@ -1031,57 +1031,6 @@ USAR|Bateria
 
 ---
 
-## Funciones auxiliares recomendadas para `main.cpp`
-
-```cpp
-#include <iostream>
-#include <string>
-#include <sstream>
-#include "juego/Jugador.h"
-#include "juego/Accion.h"
-#include "juego/Partida.h"
-#include "estructuras/PilaHistorial.h"
-#include "estructuras/ListaInventario.h"
-#include "red/ConexionJuego.h"
-
-void mostrarMenu() {
-    std::cout << "\n===== MENU DEL JUGADOR =====" << std::endl;
-    std::cout << "1. Atacar" << std::endl;
-    std::cout << "2. Defender" << std::endl;
-    std::cout << "3. Cargar energia" << std::endl;
-    std::cout << "4. Usar Pocion" << std::endl;
-    std::cout << "5. Usar Bateria" << std::endl;
-    std::cout << "6. Ver historial" << std::endl;
-    std::cout << "7. Ver inventario" << std::endl;
-    std::cout << "Seleccione una opcion: ";
-}
-
-void aplicarMensajeRecibido(const std::string& mensaje, Jugador& jugadorLocal, PilaHistorial& historial) {
-    std::stringstream ss(mensaje);
-    std::string tipo, dato;
-
-    getline(ss, tipo, '|');
-    getline(ss, dato, '|');
-
-    if (tipo == "ATACAR") {
-        int danio = std::stoi(dato);
-        jugadorLocal.recibirDanio(danio);
-        historial.push("El rival ataco con " + std::to_string(danio));
-    }
-    else if (tipo == "DEFENDER") {
-        historial.push("El rival se defendio");
-    }
-    else if (tipo == "CARGAR") {
-        historial.push("El rival cargo energia");
-    }
-    else if (tipo == "USAR") {
-        historial.push("El rival uso " + dato);
-    }
-}
-```
-
----
-
 ## Programa principal completo sugerido para la primera versión
 
 ### Archivo `main.cpp`
